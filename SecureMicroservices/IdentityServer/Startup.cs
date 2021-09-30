@@ -16,10 +16,27 @@ namespace IdentityServer {
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services) {
 
+            //// used to initialize and test build, run on startup after creating project
+            //services.AddIdentityServer()
+            //        .AddInMemoryClients(new List<Client>())
+            //        .AddInMemoryIdentityResources(new List<IdentityResource>())
+            //        .AddInMemoryApiResources(new List<ApiResource>())
+            //        .AddInMemoryApiScopes(new List<ApiScope>())                    
+            //        .AddTestUsers(new List<TestUser>())
+            //        .AddDeveloperSigningCredential();
+
+            // ApiResource                      resources you want to protect
+            // ApiScopes                        what a client app is allowed to do
+            // Clients                          what clients are allowed to use identityServer
+            // IdentityResources                user information and assigned claim types
+            // TestUsers                        create test users used to test
+            // DeveloperSigningCredential       create temporary credentials at start up time
+
             services.AddIdentityServer()
                 .AddInMemoryClients(Config.Clients)
-                .AddInMemoryApiScopes(Config.ApiScopes)
                 .AddInMemoryIdentityResources(Config.IdentityResources)
+                .AddInMemoryApiResources(Config.ApiResources)
+                .AddInMemoryApiScopes(Config.ApiScopes)                
                 .AddTestUsers(TestUsers.Users)
                 .AddDeveloperSigningCredential();
         }
