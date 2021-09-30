@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Movies.API.Data;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Movies.API {
     public class Startup {
@@ -33,6 +34,14 @@ namespace Movies.API {
             services.AddDbContext<MoviesAPIContext>(options =>
                 options.UseInMemoryDatabase("Movies"));
             //options.UseSqlServer(Configuration.GetConnectionString("MoviesAPIContext")));
+
+            services.AddAuthentication("Bearer")
+                    .AddJwtBearer("Bearer", options => {
+                        options.Authority = "https://localhost:5005";
+                        options.TokenValidationParameters = new TokenValidationParameters {
+                            ValidateAudience = false
+                        };
+                    });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,6 +56,7 @@ namespace Movies.API {
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => {
