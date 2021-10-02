@@ -22,23 +22,8 @@ namespace Movies.Client.Controllers {
         // GET: Movies
         public async Task<IActionResult> Index()
         {
-            await LogTokenAndClaims();
+            //await LogTokenAndClaims();
             return View(await _movieApiService.GetMovies());
-        }
-
-        public async Task LogTokenAndClaims() {
-            var identityToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
-
-            Debug.WriteLine($"Identity token: {identityToken}");
-
-            foreach (var claim in User.Claims) {
-                Debug.WriteLine($"Claim type: {claim.Type} - Claim value: {claim.Value}");
-            }
-        }
-
-        public async Task Logout() {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
         }
 
         // GET: Movies/Details/5
@@ -161,6 +146,21 @@ namespace Movies.Client.Controllers {
             await _movieApiService.DeleteMovie(id);
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task LogTokenAndClaims() {
+            var identityToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
+
+            Debug.WriteLine($"Identity token: {identityToken}");
+
+            foreach (var claim in User.Claims) {
+                Debug.WriteLine($"Claim type: {claim.Type} - Claim value: {claim.Value}");
+            }
+        }
+
+        public async Task Logout() {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
         }
     }
 }
