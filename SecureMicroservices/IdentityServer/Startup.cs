@@ -35,11 +35,10 @@ namespace IdentityServer {
             // DeveloperSigningCredential       create temporary credentials at start up time
 
             services.AddIdentityServer()
-                .AddInMemoryClients(Config.Clients)
+                .AddInMemoryClients(Config.Clients)                                
+                .AddInMemoryApiScopes(Config.ApiScopes)
                 .AddInMemoryIdentityResources(Config.IdentityResources)
-                .AddInMemoryApiResources(Config.ApiResources)
-                .AddInMemoryApiScopes(Config.ApiScopes)                
-                .AddTestUsers(TestUsers.Users)
+                .AddTestUsers(Config.TestUsers)
                 .AddDeveloperSigningCredential();
         }
 
