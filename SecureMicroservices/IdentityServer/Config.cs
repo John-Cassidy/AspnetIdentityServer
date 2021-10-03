@@ -2,8 +2,10 @@
 using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
+using IdentityServerHost.Quickstart.UI;
 using System.Collections.Generic;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace IdentityServer
 {
@@ -44,7 +46,10 @@ namespace IdentityServer
                        {
                            IdentityServerConstants.StandardScopes.OpenId,
                            IdentityServerConstants.StandardScopes.Profile,
-                           "movieAPI"
+                           IdentityServerConstants.StandardScopes.Address,
+                           IdentityServerConstants.StandardScopes.Email,
+                           "movieAPI",
+                           "roles"
                        }
                    }
             };
@@ -65,7 +70,13 @@ namespace IdentityServer
           new IdentityResource[]
           {
               new IdentityResources.OpenId(),
-              new IdentityResources.Profile()             
+              new IdentityResources.Profile(),
+              new IdentityResources.Address(),
+              new IdentityResources.Email(),
+              new IdentityResource(
+                    "roles",
+                    "Your role(s)",
+                    new List<string>() { "role" })
           };
 
         public static List<TestUser> TestUsers =>
@@ -78,11 +89,44 @@ namespace IdentityServer
                     Password = "jpc",
                     Claims = new List<Claim>
                     {
+                        new Claim(JwtClaimTypes.Name, "John Cassidy"),
                         new Claim(JwtClaimTypes.GivenName, "john"),
-                        new Claim(JwtClaimTypes.FamilyName, "cassidy")
+                        new Claim(JwtClaimTypes.FamilyName, "cassidy"),
+                        new Claim(JwtClaimTypes.Email, "candiawoods@gmail.com"),
+                        new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
+                        new Claim(JwtClaimTypes.Address, JsonSerializer.Serialize(new {
+                                                                                        street_addres = "55 Spring Street",
+                                                                                        locality = "Cambridge",
+                                                                                        postal_code = "02138",
+                                                                                        country = "United States"
+                                                                                    }), IdentityServerConstants.ClaimValueTypes.Json),
+                         new Claim(JwtClaimTypes.Role, "user"),
+                         new Claim(JwtClaimTypes.Role, "admin")
                     }
-                }
-            };
+                },
+                new TestUser
+                    {
+                        SubjectId = "88421113",
+                        Username = "bob",
+                        Password = "bbs",
+                        Claims =
+                        {
+                            new Claim(JwtClaimTypes.Name, "Bob Smith"),
+                            new Claim(JwtClaimTypes.GivenName, "Bob"),
+                            new Claim(JwtClaimTypes.FamilyName, "Smith"),
+                            new Claim(JwtClaimTypes.Email, "BobSmith@email.com"),
+                            new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
+                            new Claim(JwtClaimTypes.Address, JsonSerializer.Serialize(new
+                                                                                        {
+                                                                                            street_address = "One Hacker Way",
+                                                                                            locality = "Heidelberg",
+                                                                                            postal_code = 69118,
+                                                                                            country = "Germany"
+                                                                                        }), IdentityServerConstants.ClaimValueTypes.Json),
+                            new Claim(JwtClaimTypes.Role, "admin")
+                        }
+                    }
+            };       
     }
 
 }
