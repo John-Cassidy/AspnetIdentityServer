@@ -32,7 +32,7 @@ namespace Movies.Client.ApiServices
 
             var request = new HttpRequestMessage(
                 HttpMethod.Get,
-                "/api/movies");
+                "/movies"); // when calling api directly, path = /api/movies. when calling api gateway path = /movies and api gatway will translate path = /api/movies
 
             var response = await httpClient.SendAsync(
                 request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
